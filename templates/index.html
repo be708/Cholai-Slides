@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CholaiSlides | AI Presentations in 60 Seconds</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body { 
+            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .card h2 {
+            color: #2E7D32;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2E7D32;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .features {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .feature {
+            flex: 1;
+        }
+        
+        .feature h3 {
+            color: #2E7D32;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CholaiSlides 💚</h1>
+            <p>AI Presentations in 60 Seconds. 100+ Languages.</p>
+        </div>
+        
+        <div class="card">
+            <h2>Create Your Presentation</h2>
+            <form action="/generate" method="post">
+                <div class="form-group">
+                    <label>What is your presentation about?</label>
+                    <input type="text" name="topic" placeholder="e.g. Sales deck for coffee shop, School project on climate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Choose Language</label>
+                    <select name="language">
+                        <option>English</option>
+                        <option>Tokpisin</option>
+                        <option>Spanish</option>
+                        <option>French</option>
+                        <option>Portuguese</option>
+                        <option>Hindi</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn">Generate Slides with AI</button>
+            </form>
+            
+            <div class="features">
+                <div class="feature">
+                    <h3>⚡ 60 Seconds</h3>
+                    <p>Fast</p>
+                </div>
+                <div class="feature">
+                    <h3>🌍 100+ Languages</h3>
+                    <p>Global</p>
+                </div>
+                <div class="feature">
+                    <h3>📊 Pro Design</h3>
+                    <p>Beautiful</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Built by Cholai Tech | Hausman & Digital HausMan</p>
+        </div>
+    </div>
+</body>
+</html>
