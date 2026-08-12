@@ -1,4 +1,5 @@
 // Top-level build file for CholaiSlides
+
 buildscript {
     repositories {
         google()
@@ -16,4 +17,8 @@ allprojects {
         google()
         mavenCentral()
     }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
