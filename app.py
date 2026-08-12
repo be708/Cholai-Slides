@@ -1,14 +1,25 @@
 """
 CholaiSlides - AI Presentation Maker
 Built by Cholai Tech
+Saves orders to Firebase
 """
-
-from flask import Flask, render_template, request, send_file
 import io
+from flask import Flask, render_template, request, send_file, redirect
 from pptx import Presentation
 from pptx.util import Inches
 
+# FIREBASE SETUP
+import firebase_admin
+from firebase_admin import credentials, firestore
+import datetime
+
 app = Flask(__name__)
+
+# Initialize Firebase - REPLACE WITH YOUR SERVICE ACCOUNT JSON
+# cred = credentials.Certificate("serviceAccountKey.json")
+# firebase_admin.initialize_app(cred)
+# db = firestore.client()
+db = None # Comment this out after adding your Firebase key
 
 @app.route('/')
 def home():
@@ -16,13 +27,22 @@ def home():
 
 @app.route('/generate', methods=['POST'])
 def generate_slides():
-    markdown_text = request.form['topic'] # we will use this box for full markdown
+    markdown_text = request.form['topic']
     language = request.form['language']
+    email = request.form.get('email', 'no-email') # for order form
 
-    # Create PowerPoint
+    # SAVE ORDER TO FIREBASE CHOLAI HQ
+    if db:
+        order_data = {
+            'topic': markdown_text,
+            'language': language,
+            'email': email,
+            'timestamp': datetime.datetime.now()
+        }
+        db.collection('orders').add(order_data)
+
+    # CREATE POWERPOINT
     prs = Presentation()
-
-    # Split slides by ---
     slides_content = markdown_text.split('---')
 
     for slide_text in slides_content:
@@ -30,14 +50,13 @@ def generate_slides():
         if not slide_text:
             continue
 
-        # Choose layout: Title slide vs Content slide
+        # Choose layout
         if '#' in slide_text.split('\n')[0]:
-            slide_layout = prs.slide_layouts[0] # Title slide
+            slide_layout = prs.slide_layouts[0] # Title
         else:
-            slide_layout = prs.slide_layouts[1] # Content slide
+            slide_layout = prs.slide_layouts[1] # Content
 
         slide = prs.slides.add_slide(slide_layout)
-
         lines = slide_text.split('\n')
 
         # Title
@@ -47,7 +66,7 @@ def generate_slides():
 
         # Content
         if len(slide.shapes) > 1 and len(lines) > 1:
-            content = '\n'.join([l.replace('- ', '• ').strip() for l in lines[1:] if l.strip()])
+            content = '\n'.join([l.replace('- ', '') for l in lines[1:]])
             if slide.placeholders:
                 slide.placeholders[1].text = content
 
@@ -63,5 +82,10 @@ def generate_slides():
         mimetype='application/vnd.openxmlformats-officedocument.presentationml.presentation'
     )
 
+@app.route('/gold-button')
+def gold_button():
+    # Redirect to your website
+    return redirect("https://be708.github.io")
+
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=False, host='0.0.0.0', port=5000)
