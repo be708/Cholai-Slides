@@ -1,75 +1,121 @@
 """
-CholaiSlides - AI Presentation Maker V3
+CholaiSlides - AI Presentation Maker V4
 Built by Cholai Tech
+Context-Aware Brain
 Saves orders to Firebase
-Smart Brain: Turns plain ideas into pro slides
 """
 import io
 import re
 from flask import Flask, render_template, request, send_file, redirect
 from pptx import Presentation
 from pptx.util import Inches
-from pptx.enum.text import PP_ALIGN
-
-# FIREBASE SETUP
-import firebase_admin
-from firebase_admin import credentials, firestore
 import datetime
 
 app = Flask(__name__)
 
-# Initialize Firebase - REPLACE WITH YOUR SERVICE ACCOUNT JSON
+# FIREBASE - ADD YOUR KEY LATER
+# import firebase_admin
+# from firebase_admin import credentials, firestore
 # cred = credentials.Certificate("serviceAccountKey.json")
 # firebase_admin.initialize_app(cred)
 # db = firestore.client()
-db = None # Comment this out after adding your Firebase key
+db = None
+
+
+def generate_cholaislides_content():
+    """Content specifically about CholaiSlides"""
+    return {
+        "problem": [
+            "Founders waste 5+ hours making pitch decks", 
+            "Canva is too complex and generic", 
+            "No AI tool built specifically for PNG businesses"
+        ],
+        "solution": [
+            "CholaiSlides: Paste idea → Get 10-slide deck in 60 seconds", 
+            "Built for PNG founders, NGOs, and students", 
+            "No design skills needed"
+        ],
+        "features": [
+            "AI-powered slide generation", 
+            "Investor-ready 10 slide structure", 
+            "Auto-save to Cholai HQ", 
+            "Export to.pptx instantly"
+        ],
+        "market": [
+            "500,000+ SMEs in PNG", 
+            "10,000+ students and NGOs", 
+            "Global market: $2B presentation software"
+        ]
+    }
+
+
+def generate_cholaichat_content():
+    """Content specifically about CholaiChat"""
+    return {
+        "problem": [
+            "840+ PNG languages at risk of being lost", 
+            "Elders' stories not documented", 
+            "Business barriers due to language"
+        ],
+        "solution": [
+            "CholaiChat Hausman: AI that speaks Tokpisin + 840 languages", 
+            "PNG Tubunna Archives to preserve culture", 
+            "6 month Business management courses"
+        ],
+        "features": [
+            "Speaks and understands 840 PNG languages", 
+            "Tubunna Archives: traditions, WW1/WW2 stories", 
+            "Business management courses", 
+            "Voice chat in local language"
+        ],
+        "market": [
+            "10M+ people in PNG", 
+            "840 languages - 12% of world's languages", 
+            "Government digitization projects"
+        ]
+    }
 
 
 def smart_split_to_slides(idea_text):
     """
-    KING'S AI BRAIN V3: No repeats + Extracts Problem from your text
+    KING'S AI BRAIN V4: Context-Aware
     """
     slides = []
+    idea_lower = idea_text.lower()
     sentences = [s.strip() for s in re.split(r'\.|\n', idea_text) if len(s.strip()) > 10]
-    used_sentences = [] # Track what we already used
+    
+    # DETECT CONTEXT
+    if "cholaislides" in idea_lower:
+        context = generate_cholaislides_content()
+        product_name = "CholaiSlides"
+    elif "cholaichat" in idea_lower:
+        context = generate_cholaichat_content()
+        product_name = "CholaiChat Hausman"
+    else:
+        # Generic fallback
+        context = generate_cholaislides_content()
+        product_name = "Your Product"
     
     # SLIDE 1: TITLE
-    title = sentences[0][:80] if sentences else "Your Presentation"
+    title = idea_text[:80]
     slides.append({"title": title, "content": ["AI-Powered Presentation by CholaiSlides", "Turn Ideas Into Slides in 60 Seconds"]})
     
-    # SLIDE 2: PROBLEM - Force extract disappearing/lost/challenge
-    problem_keywords = ['disappear','lost','challenge','problem','dying','struggle','barrier']
-    problem_points = [s for s in sentences if any(word in s.lower() for word in problem_keywords)]
-    if not problem_points:
-        problem_points = ["840+ PNG languages at risk of being lost", "Elders' stories not documented", "Business barriers due to language"]
-    used_sentences.extend(problem_points)
-    slides.append({"title": "The Problem", "content": problem_points[:3]})
+    # SLIDE 2: PROBLEM
+    slides.append({"title": "The Problem", "content": context["problem"]})
     
-    # SLIDE 3: SOLUTION - Remove sentences already used
-    solution_keywords = ['app','solution','speaks','understands','chat','ai']
-    solution_points = [s for s in sentences if s not in used_sentences and any(word in s.lower() for word in solution_keywords)]
-    if not solution_points:
-        solution_points = ["CholaiChat Hausman: AI for all of PNG"]
-    used_sentences.extend(solution_points)
-    slides.append({"title": "Our Solution", "content": solution_points[:3]})
+    # SLIDE 3: SOLUTION
+    slides.append({"title": "Our Solution", "content": context["solution"]})
     
-    # SLIDE 4: KEY FEATURES - Archives + Courses
-    feature_keywords = ['archives','traditions','culture','courses','languages','tokpisin','business','management','stories','ww1','ww2']
-    feature_points = [s for s in sentences if s not in used_sentences and any(word in s.lower() for word in feature_keywords)]
-    used_sentences.extend(feature_points)
-    slides.append({"title": "Key Features", "content": feature_points[:4]})
+    # SLIDE 4: KEY FEATURES
+    slides.append({"title": "Key Features", "content": context["features"]})
     
-    # SLIDE 5: MARKET OPPORTUNITY - Numbers + PNG
-    market_keywords = ['png','people','million','languages','840','population']
-    market_points = [s for s in sentences if s not in used_sentences and any(word in s.lower() for word in market_keywords)]
-    if not market_points:
-        market_points = ["10M+ people in PNG", "840 languages - 12% of world's languages"]
-    slides.append({"title": "Market Opportunity", "content": market_points[:3]})
+    # SLIDE 5: MARKET OPPORTUNITY
+    slides.append({"title": "Market Opportunity", "content": context["market"]})
     
     # SLIDES 6-10: PRO FILLER
     slides.append({"title": "Business Model", "content": ["Subscription: K15/month", "Government & NGO Partnerships", "Enterprise Licensing", "Freemium Model"]})
     slides.append({"title": "Traction & Milestones", "content": ["MVP Built and Deployed", "First Users Onboarded", "Key Partnerships", "Product Roadmap"]})
-    slides.append({"title": "Our Team", "content": ["Built by Cholai Tech", "Experts in AI + PNG Culture", "Mission Driven Founders"]})
+    slides.append({"title": "Our Team", "content": ["Built by Cholai Tech", "Experts in AI + PNG", "Mission Driven Founders"]})
     slides.append({"title": "The Ask", "content": ["Investment: K500,000", "18 Month Runway", "Use: Development + Marketing", "Goal: 100,000 Users"]})
     slides.append({"title": "Contact Us", "content": ["Website: be708.github.io", "WhatsApp: 72817573", "Email: bugfreezonepng@gmail.com", "Powered by Cholai Tech"]})
     
@@ -83,11 +129,11 @@ def home():
 
 @app.route('/generate', methods=['POST'])
 def generate_slides():
-    user_idea = request.form['topic'] # User just pastes idea
+    user_idea = request.form['topic']
     language = request.form['language']
     email = request.form.get('email', 'no-email')
 
-    # SAVE ORDER TO FIREBASE CHOLAI HQ
+    # SAVE ORDER TO FIREBASE
     if db:
         order_data = {
             'topic': user_idea,
@@ -123,8 +169,6 @@ def generate_slides():
     file_stream = io.BytesIO()
     prs.save(file_stream)
     file_stream.seek(0)
-    
-    # TODO NEXT: Add email sending here
 
     return send_file(
         file_stream,
