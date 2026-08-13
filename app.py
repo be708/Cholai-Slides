@@ -72,8 +72,9 @@ def generate_slides():
 
     slides_data = generate_with_ai(user_idea)
     product_name = user_idea[:30]
-
-    prs = Presentation()
+template_choice = request.form.get('template', 'template02')
+template_file = TEMPLATES.get(template_choice, "template02.pptx")
+    prs = Presentation(f'static/templates/{template_file}')
     prs.slide_width = Inches(10)
     prs.slide_height = Inches(7.5)
 
