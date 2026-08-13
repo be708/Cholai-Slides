@@ -1,4 +1,5 @@
-    Flask
-    python-pptx
-    firebase-admin
-    gunicorn
+Flask
+google-generativeai
+python-pptx
+gunicorn
+python-dotenv
