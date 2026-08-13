@@ -24,6 +24,13 @@
 
     <div class="form-box">
         <h2>Generate Your Slides</h2>
+        <h3>Choose Template</h3>
+<div style="border:1px solid #D4AF37; padding:15px; margin:10px 0; border-radius:8px;">
+    <img src="{{ url_for('static', filename='images/template02.png') }}" style="width:100%; max-width:300px;">
+    <h4>SALES PITCH</h4>
+    <p>Investors, clients, partners - close the deal</p>
+    <input type="hidden" name="template" value="template02">
+</div>
         <form action="/generate" method="post">
             <input type="email" name="email" placeholder="Your Email for Order" required>
             <textarea name="topic" rows="8" placeholder="Paste your Markdown topic here...
