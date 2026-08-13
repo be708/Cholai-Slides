@@ -1,5 +1,5 @@
 """
-CholaiSlides - AI Presentation Maker V5
+CholaiSlides - AI Presentation Maker V5.1
 TRUE AI BRAIN - Thinks and Generates
 Built by Cholai Tech
 """
@@ -16,12 +16,10 @@ db = None
 def generate_smart_content(product_name, keywords):
     """AI Brain that generates content based on product + keywords"""
     
-    # Detect keywords
-    has_languages = any(k in keywords for k in ["language", "tokpisin", "840", "png"])
-    has_ai = any(k in keywords for k in ["ai", "siri", "chat", "assistant"])
-    has_business = any(k in keywords for k in ["business", "course", "management"])
+    keywords_str = " ".join(keywords)
     
-    if has_languages:
+    # Detect what type of product
+    if any(k in keywords_str for k in ["language", "tokpisin", "840", "png", "siri", "chat"]):
         problem = [
             "840+ PNG languages at risk of being lost",
             "No AI assistant that speaks Tokpisin + local languages", 
@@ -43,6 +41,30 @@ def generate_smart_content(product_name, keywords):
             "840 languages - 12% of world's languages", 
             "Government + Education digitization"
         ]
+    
+    elif any(k in keywords_str for k in ["crash", "telematics", "ai", "car", "vehicle", "safety"]):
+        problem = [
+            "Car accidents in PNG with no fast response",
+            "No AI system to detect crashes and alert help",
+            "Insurance companies lose millions in fraud"
+        ]
+        solution = [
+            f"{product_name}: AI that detects crashes instantly",
+            "Automatic alerts to ambulance + police + family",
+            "Telematics data for insurance and safety"
+        ]
+        features = [
+            "Real-time crash detection using AI",
+            "GPS tracking + emergency alerts",
+            "Driver behavior monitoring",
+            "Insurance fraud prevention"
+        ]
+        market = [
+            "100,000+ vehicles in PNG",
+            "K200M+ annual insurance market",
+            "Fleet companies + Government"
+        ]
+        
     else:
         # Generic fallback
         problem = [
@@ -63,13 +85,12 @@ def generate_smart_content(product_name, keywords):
 
 def smart_split_to_slides(idea_text):
     """
-    KING'S AI BRAIN V5: TRUE THINKING
+    KING'S AI BRAIN V5.1: TRUE THINKING
     """
     slides = []
     idea_lower = idea_text.lower()
     
     # STEP 1: EXTRACT PRODUCT NAME
-    # Look for "for [PRODUCT]" pattern
     match = re.search(r'for\s+([^-.]+)', idea_text, re.IGNORECASE)
     if match:
         product_name = match.group(1).strip()
@@ -94,7 +115,7 @@ def smart_split_to_slides(idea_text):
     slides.append({"title": "The Ask", "content": ["Investment: K500,000", "18 Month Runway", "Use: Development + Marketing", "Goal: 100,000 Users"]})
     slides.append({"title": "Contact Us", "content": ["Website: be708.github.io", "WhatsApp: 72817573", "Email: bugfreezonepng@gmail.com", "Powered by Cholai Tech"]})
     
-    return slides[:10]
+    return slides[:10], product_name
 
 
 @app.route('/')
@@ -116,7 +137,7 @@ def generate_slides():
         }
         db.collection('orders').add(order_data)
 
-    slides_data = smart_split_to_slides(user_idea)
+    slides_data, product_name = smart_split_to_slides(user_idea)
 
     prs = Presentation()
     prs.slide_width = Inches(10)
@@ -140,10 +161,11 @@ def generate_slides():
     prs.save(file_stream)
     file_stream.seek(0)
 
+    safe_name = product_name.replace(" ", "_")[:30]
     return send_file(
         file_stream,
         as_attachment=True,
-        download_name=f'{product_name}_Pitch.pptx',
+        download_name=f'{safe_name}_Pitch.pptx',
         mimetype='application/vnd.openxmlformats-officedocument.presentationml.presentation'
     )
 
