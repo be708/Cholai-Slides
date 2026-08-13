@@ -17,6 +17,9 @@ app = Flask(__name__)
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY") 
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash')
+TEMPLATES = {
+    "template02": "template02.pptx"
+}
 
 db = None
 
