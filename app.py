@@ -1,5 +1,5 @@
 """
-CholaiSlides - AI Presentation Maker V2
+CholaiSlides - AI Presentation Maker V3
 Built by Cholai Tech
 Saves orders to Firebase
 Smart Brain: Turns plain ideas into pro slides
@@ -27,57 +27,50 @@ db = None # Comment this out after adding your Firebase key
 
 def smart_split_to_slides(idea_text):
     """
-    KING'S AI BRAIN V2: Reads the idea and pulls real content
+    KING'S AI BRAIN V3: No repeats + Extracts Problem from your text
     """
     slides = []
-    # Clean sentences
     sentences = [s.strip() for s in re.split(r'\.|\n', idea_text) if len(s.strip()) > 10]
+    used_sentences = [] # Track what we already used
     
     # SLIDE 1: TITLE
     title = sentences[0][:80] if sentences else "Your Presentation"
     slides.append({"title": title, "content": ["AI-Powered Presentation by CholaiSlides", "Turn Ideas Into Slides in 60 Seconds"]})
     
-    # SLIDE 2: PROBLEM
-    problem_keywords = ['problem','challenge','disappear','lost','struggle','barrier','issue','dying']
+    # SLIDE 2: PROBLEM - Force extract disappearing/lost/challenge
+    problem_keywords = ['disappear','lost','challenge','problem','dying','struggle','barrier']
     problem_points = [s for s in sentences if any(word in s.lower() for word in problem_keywords)]
     if not problem_points:
-        problem_points = ["Key challenges in the market", "Opportunity for innovation", "Why now is the time"]
-    slides.append({"title": "The Problem", "content": problem_points[:4]})
+        problem_points = ["840+ PNG languages at risk of being lost", "Elders' stories not documented", "Business barriers due to language"]
+    used_sentences.extend(problem_points)
+    slides.append({"title": "The Problem", "content": problem_points[:3]})
     
-    # SLIDE 3: SOLUTION
-    solution_keywords = ['app','solution','platform','speaks','understands','chat','ai']
-    solution_points = [s for s in sentences if any(word in s.lower() for word in solution_keywords)]
+    # SLIDE 3: SOLUTION - Remove sentences already used
+    solution_keywords = ['app','solution','speaks','understands','chat','ai']
+    solution_points = [s for s in sentences if s not in used_sentences and any(word in s.lower() for word in solution_keywords)]
     if not solution_points:
-        solution_points = ["Introducing our solution", "How it solves the problem", "Key benefits"]
-    slides.append({"title": "Our Solution", "content": solution_points[:4]})
+        solution_points = ["CholaiChat Hausman: AI for all of PNG"]
+    used_sentences.extend(solution_points)
+    slides.append({"title": "Our Solution", "content": solution_points[:3]})
     
-    # SLIDE 4: KEY FEATURES
-    feature_keywords = ['also','archives','traditions','culture','courses','features','languages','tokpisin','business','management','accounting','stories']
-    feature_points = [s for s in sentences if any(word in s.lower() for word in feature_keywords)]
-    if not feature_points:
-        feature_points = ["Feature 1: Core functionality", "Feature 2: User benefits", "Feature 3: Unique value"]
-    slides.append({"title": "Key Features", "content": feature_points[:5]})
+    # SLIDE 4: KEY FEATURES - Archives + Courses
+    feature_keywords = ['archives','traditions','culture','courses','languages','tokpisin','business','management','stories','ww1','ww2']
+    feature_points = [s for s in sentences if s not in used_sentences and any(word in s.lower() for word in feature_keywords)]
+    used_sentences.extend(feature_points)
+    slides.append({"title": "Key Features", "content": feature_points[:4]})
     
-    # SLIDE 5: MARKET OPPORTUNITY
-    market_keywords = ['png','people','million','languages','market','840','population','target','users']
-    market_points = [s for s in sentences if any(word in s.lower() for word in market_keywords)]
+    # SLIDE 5: MARKET OPPORTUNITY - Numbers + PNG
+    market_keywords = ['png','people','million','languages','840','population']
+    market_points = [s for s in sentences if s not in used_sentences and any(word in s.lower() for word in market_keywords)]
     if not market_points:
-        market_points = ["Large target market", "High growth potential", "Competitive advantage"]
-    slides.append({"title": "Market Opportunity", "content": market_points[:4]})
+        market_points = ["10M+ people in PNG", "840 languages - 12% of world's languages"]
+    slides.append({"title": "Market Opportunity", "content": market_points[:3]})
     
-    # SLIDE 6: BUSINESS MODEL
+    # SLIDES 6-10: PRO FILLER
     slides.append({"title": "Business Model", "content": ["Subscription: K15/month", "Government & NGO Partnerships", "Enterprise Licensing", "Freemium Model"]})
-    
-    # SLIDE 7: TRACTION & MILESTONES
     slides.append({"title": "Traction & Milestones", "content": ["MVP Built and Deployed", "First Users Onboarded", "Key Partnerships", "Product Roadmap"]})
-    
-    # SLIDE 8: OUR TEAM
     slides.append({"title": "Our Team", "content": ["Built by Cholai Tech", "Experts in AI + PNG Culture", "Mission Driven Founders"]})
-    
-    # SLIDE 9: THE ASK
     slides.append({"title": "The Ask", "content": ["Investment: K500,000", "18 Month Runway", "Use: Development + Marketing", "Goal: 100,000 Users"]})
-    
-    # SLIDE 10: CONTACT US
     slides.append({"title": "Contact Us", "content": ["Website: be708.github.io", "WhatsApp: 72817573", "Email: bugfreezonepng@gmail.com", "Powered by Cholai Tech"]})
     
     return slides[:10]
