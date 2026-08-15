@@ -1,11 +1,9 @@
 import os
-from flask import Flask, request, render_template, send_file, jsonify
+from flask import Flask, request, render_template, send_file
 from pptx import Presentation
 from pptx.util import Inches, Pt
-from pptx.enum.text import PP_ALIGN
 import google.generativeai as genai
 from io import BytesIO
-import re
 
 app = Flask(__name__)
 
@@ -13,7 +11,7 @@ GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
 
 TEMPLATES = {
-"template02": "template02.pptx"
+    "template02": "template02.pptx"
 }
 
 def generate_with_ai(user_idea):
@@ -40,7 +38,8 @@ def parse_markdown(md_text):
     blocks = md_text.split('---')
     for block in blocks:
         lines = [l.strip() for l in block.split('\n') if l.strip()]
-        if not lines: continue
+        if not lines: 
+            continue
         title = lines[0].replace('# ', '')
         content = [l.replace('- ', '') for l in lines[1:]]
         slides.append({"title": title, "content": content})
@@ -96,4 +95,4 @@ def generate_slides():
     )
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=True)
