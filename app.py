@@ -15,7 +15,7 @@ TEMPLATES = {
 }
 
 def generate_with_ai(user_idea):
-    model = genai.GenerativeModel('gemini-1.5-flash-latest')
+    model = genai.GenerativeModel('gemini-1.0-pro-latest')
     prompt = f"""
     You are an expert presentation designer. Create a 6 slide PowerPoint outline for: {user_idea}
     Format: Use Markdown. Each slide starts with # Title
