@@ -13,9 +13,8 @@ genai.configure(api_key=GOOGLE_API_KEY)
 TEMPLATES = {
     "template02": "template02.pptx"
 }
-
 def generate_with_ai(user_idea):
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-1.0-pro')
     prompt = f"""
     You are an expert presentation designer. Create a 6 slide PowerPoint outline for: {user_idea}
     Format: Use Markdown. Each slide starts with # Title
@@ -32,8 +31,7 @@ def generate_with_ai(user_idea):
     response = model.generate_content(prompt)
     return parse_markdown(response.text)
 
-
-def parse_markdown(md_text):
+ def parse_markdown(md_text):
     slides = []
     blocks = md_text.split('---')
     for block in blocks:
