@@ -32,8 +32,12 @@
     <input type="hidden" name="template" value="template02">
 </div>
         <form action="/generate" method="post">
-            <input type="email" name="email" placeholder="Your Email for Order" required>
-            <textarea name="topic" rows="8" placeholder="Paste your Markdown topic here...
+        <input type="text" name="topic" placeholder="e.g. Coffee Export Business in Goroka" required 
+style="padding:12px; margin-bottom:10px;">
+
+<textarea name="markdown" rows="8" placeholder="AI will fill this for you... or paste your own slides here">
+</textarea>
+            
 Example:
 # Slide 1
 - Point 1
