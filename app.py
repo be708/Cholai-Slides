@@ -67,7 +67,7 @@ def home():
 
 @app.route('/generate', methods=['POST'])
 def generate_slides():
-    user_idea = request.form['topic']
+    user_idea = request.form.get('topic') or request.form.get('markdown', 'Default topic')[:100]
     email = request.form.get('email', 'no-email')
 
     slides_data = generate_with_ai(user_idea)
