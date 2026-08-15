@@ -67,10 +67,13 @@ def home():
 
 @app.route('/generate', methods=['POST'])
 def generate_slides():
-    user_idea = request.form.get('topic') or request.form.get('markdown', 'Default topic')[:100]
-    email = request.form.get('email', 'no-email')
+    user_idea = request.form.get('topic')
+manual_markdown = request.form.get('markdown')
 
-    slides_data = generate_with_ai(user_idea)
+if user_idea and user_idea.strip() != "":
+    slides_data = generate_with_ai(user_idea)  # Use AI
+else:
+    slides_data = manual_markdown # For now, we’ll parse this later
     product_name = user_idea[:30]
     template_choice = request.form.get('template', 'template02')
     template_file = TEMPLATES.get(template_choice, "template02.pptx")
