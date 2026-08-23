@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template, send_from_directory
 from pptx import Presentation
 from pptx.util import Inches, Pt
 import google.generativeai as genai
