@@ -11,8 +11,13 @@ GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
 
 TEMPLATES = {
-    "template02": "template02.pptx"
+    "1": "1.png",
+    "2": "2.png", 
+    "3": "3.png",
+    #... add up to 27
+    "27": "27.png"
 }
+
 
 def generate_with_ai(user_idea):
     model = genai.GenerativeModel('gemini-1.0-pro-latest')
