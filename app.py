@@ -71,23 +71,38 @@ def generate_slides():
 
         product_name = user_idea[:30] if user_idea else "My Presentation"
         template_file = TEMPLATES.get(template_choice, "template02.pptx")
-        prs = Presentation(f'static/templates/{template_file}')
+        prs = Presentation() # Start with blank presentation
         prs.slide_width = Inches(10)
         prs.slide_height = Inches(7.5)
         
-        for slide_info in slides_data:
-            slide = prs.slides.add_slide(prs.slide_layouts[1])
-            title = slide.shapes.title
-            title.text = slide_info["title"]
-
-            content = slide.placeholders[1]
-            tf = content.text_frame
-            tf.clear()
-            for point in slide_info["content"]:
-                p = tf.add_paragraph()
-                p.text = point
-                p.level = 0
-                p.font.size = Pt(18)
+        for i, slide_info in enumerate(slides_data):
+    slide = prs.slides.add_slide(prs.slide_layouts[6]) # blank layout
+    
+    # 1. ADD PNG AS BACKGROUND - cycles through 1-27
+    template_num = str((i % 27) + 1)
+    template_png = TEMPLATES.get(template_num)
+    slide.shapes.add_picture(f'templates/{template_png}', 0, 0, width=prs.slide_width, height=prs.slide_height)
+    
+    # 2. ADD TEXT BOX ON TOP OF PNG
+    left = Inches(0.5)
+    top = Inches(1.5)
+    width = Inches(9)
+    height = Inches(5)
+    textbox = slide.shapes.add_textbox(left, top, width, height)
+    tf = textbox.text_frame
+    
+    p = tf.add_paragraph()
+    p.text = slide_info["title"]
+    p.font.size = Pt(32)
+    p.font.bold = True
+    
+    for point in slide_info["content"]:
+        p = tf.add_paragraph()
+        p.text = point
+        p.level = 0
+        p.font.size = Pt(18)
+                
+            
 
         file_stream = BytesIO()
         prs.save(file_stream)
