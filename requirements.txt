@@ -1,6 +1,4 @@
-Flask
-google-generativeai
-python-pptx
+flask
 gunicorn
-python-dotenv
-flask-cors 
+python-pptx
+openai
