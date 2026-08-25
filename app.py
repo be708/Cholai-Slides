@@ -98,10 +98,10 @@ def generate_slides():
              pe.font.bold = True
     
     for point in slide_info["content"]:
-        p = tf.add_paragraph()
-        p.text = point
-        p.level = 0
-        p.font.size = Pt(18)
+            pe = tf.add_paragraph()
+            pe.text = point
+            pe.level = 0
+            pe.font.size = Pt(18)
                 
             
 
