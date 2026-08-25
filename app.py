@@ -115,5 +115,5 @@ def generate_slides():
         )
     except Exception as e:
         return f"<h1>Error: {str(e)}</h1>", 500
-        if __name__ == '__main__':
-            app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
