@@ -1,13 +1,13 @@
 import os
 from flask import Flask, request, render_template, send_from_directory
-from flash_cors import CORS 
+from flask_cors import CORS 
 from pptx import Presentation
 from pptx.util import Inches, Pt
 import google.generativeai as genai
 from io import BytesIO
 
 app = Flask(__name__)
-
+CORS(app)
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
 
