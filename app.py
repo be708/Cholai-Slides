@@ -56,54 +56,52 @@ def parse_markdown(md_text):
 def home():
     return render_template('index.html')
 
-
 @app.route('/generate', methods=['POST'])
 def generate_slides():
     try:
         user_idea = request.form.get('topic')
         manual_markdown = request.form.get('markdown')
-        email = request.form.get('email', 'no-email')
-        template_choice = request.form.get('template', 'template02')
+        email = request.form.get('email', '')
+        template_choice = request.form.get('template', '1')
 
-        if user_idea and user_idea.strip()!= "":
-            slides_data = generate_with_ai(user_idea) # AI MODE
+        if user_idea and user_idea.strip():
+            slides_data = generate_with_ai(user_idea)
         else:
-            slides_data = parse_markdown(manual_markdown) # MANUAL MODE
+            slides_data = parse_markdown(manual_markdown)
 
-        product_name = user_idea[:30] if user_idea else "My Presentation"
-        template_file = TEMPLATES.get(template_choice, "template02.pptx")
-        prs = Presentation() # Start with blank presentation
+        product_name = user_idea[:30] if user_idea else "Manual_Slides"
+        template_file = TEMPLATES.get(template_choice)
+        prs = Presentation()
         prs.slide_width = Inches(10)
         prs.slide_height = Inches(7.5)
-        
+
         for i, slide_info in enumerate(slides_data):
-            slide = prs.slides.add_slide(prs.slide_layouts[6]) # blank layout
-    
-             # 1. ADD PNG AS BACKGROUND - cycles through 1-27
-             template_num = str((i % 27) + 1)
-             template_png = TEMPLATES.get(template_num)
-             slide.shapes.add_picture(f'templates/{template_png}', 0, 0, width=prs.slide_width, height=prs.slide_height)
-    
-             # 2. ADD TEXT BOX ON TOP OF PNG
-             left = Inches(0.5)
-             top = Inches(1.5)
-             width = Inches(9)
-             height = Inches(5)
-             textbox = slide.shapes.add_textbox(left, top, width, height)
-             tf = textbox.text_frame
-    
-             pe = tf.add_paragraph()
-             pe.text = slide_info["title"]
-             pe.font.size = Pt(32)
-             pe.font.bold = True
-    
-        for point in slide_info["content"]:
+            slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+            # 1. ADD PNG AS BACKGROUND
+            template_num = str((i % 27) + 1)
+            template_png = TEMPLATES.get(template_num)
+            slide.shapes.add_picture(f'templates/{template_png}', 0, 0, width=prs.slide_width, height=prs.slide_height)
+
+            # 2. ADD TEXT BOX ON TOP OF PNG
+            left = Inches(0.5)
+            top = Inches(1.5)
+            width = Inches(9)
+            height = Inches(5)
+            textbox = slide.shapes.add_textbox(left, top, width, height)
+            tf = textbox.text_frame
+            tf.clear()
+
             pe = tf.add_paragraph()
-            pe.text = point
-            pe.level = 0
-            pe.font.size = Pt(18)
-                
-            
+            pe.text = slide_info["title"]
+            pe.font.size = Pt(32)
+            pe.font.bold = True
+
+            for point in slide_info["content"]:
+                p = tf.add_paragraph()
+                p.text = point
+                p.level = 0
+                p.font.size = Pt(18)
 
         file_stream = BytesIO()
         prs.save(file_stream)
@@ -116,7 +114,6 @@ def generate_slides():
             mimetype='application/vnd.openxmlformats-officedocument.presentationml.presentation'
         )
     except Exception as e:
-        return f"<h1>Error: {str(e)}</h1><br><a href='/'>Go Back</a>", 500
-
-if __name__ == '__main__':
-    app.run(debug=True)
+        return f"<h1>Error: {str(e)}</h1>", 500
+        if__name__=='__main__':
+           app.run(debug=True)
