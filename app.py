@@ -77,25 +77,25 @@ def generate_slides():
         prs.slide_height = Inches(7.5)
         
         for i, slide_info in enumerate(slides_data):
-    slide = prs.slides.add_slide(prs.slide_layouts[6]) # blank layout
+            slide = prs.slides.add_slide(prs.slide_layouts[6]) # blank layout
     
-    # 1. ADD PNG AS BACKGROUND - cycles through 1-27
-    template_num = str((i % 27) + 1)
-    template_png = TEMPLATES.get(template_num)
-    slide.shapes.add_picture(f'templates/{template_png}', 0, 0, width=prs.slide_width, height=prs.slide_height)
+             # 1. ADD PNG AS BACKGROUND - cycles through 1-27
+             template_num = str((i % 27) + 1)
+             template_png = TEMPLATES.get(template_num)
+             slide.shapes.add_picture(f'templates/{template_png}', 0, 0, width=prs.slide_width, height=prs.slide_height)
     
-    # 2. ADD TEXT BOX ON TOP OF PNG
-    left = Inches(0.5)
-    top = Inches(1.5)
-    width = Inches(9)
-    height = Inches(5)
-    textbox = slide.shapes.add_textbox(left, top, width, height)
-    tf = textbox.text_frame
+             # 2. ADD TEXT BOX ON TOP OF PNG
+             left = Inches(0.5)
+             top = Inches(1.5)
+             width = Inches(9)
+             height = Inches(5)
+             textbox = slide.shapes.add_textbox(left, top, width, height)
+             tf = textbox.text_frame
     
-    p = tf.add_paragraph()
-    p.text = slide_info["title"]
-    p.font.size = Pt(32)
-    p.font.bold = True
+             pe = tf.add_paragraph()
+             pe.text = slide_info["title"]
+             pe.font.size = Pt(32)
+             pe.font.bold = True
     
     for point in slide_info["content"]:
         p = tf.add_paragraph()
